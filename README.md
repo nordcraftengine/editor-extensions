@@ -1,6 +1,6 @@
 # Editor Extensions
 
-The [toddle](https://toddle.dev?utm_source=github) editor previews toddle pages/components in an iframe. In order to work with authenticated APIs, it's necessary to run a browser extension that helps setting cookies in the iframe. This is normally restricted by the browser since the editor and the iframe run on 2 different origins.
+The [Nordcraft](https://nordcraft.com?utm_source=github) editor previews Nordcraft pages/components in an iframe. In order to work with authenticated APIs, it's necessary to run a browser extension that helps setting cookies in the iframe. This is normally restricted by the browser since the editor and the iframe run on 2 different origins.
 
 This repository holds code for the relevant browser extensions - 1 for Chrome and 1 for Firefox.
 
