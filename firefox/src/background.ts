@@ -1,7 +1,7 @@
 type SetCookiesArguments =
   import('../../shared/setCookies.js').SetCookiesArguments
 
-console.info('toddle extension loaded')
+console.info('nordcraft extension loaded')
 
 let setCookies: (args: SetCookiesArguments) => void | undefined
 const setup = async () => {
@@ -12,7 +12,7 @@ const setup = async () => {
 setup()
 
 /**
- * Used to send notifications to the toddle editor about which cookies are set
+ * Used to send notifications to the nordcraft editor about which cookies are set
  */
 const notifyUser = async (requestedUrl: string) => {
   try {
@@ -69,7 +69,7 @@ browser.webRequest.onBeforeSendHeaders.addListener(
     return { requestHeaders }
   },
   {
-    urls: ['https://*.toddle.site/*'],
+    urls: ['https://*.toddle.site/*', 'https://*.nordcraft.site/*'],
     types: ['sub_frame', 'xmlhttprequest'],
   },
   // Necessary permissions to alter request headers
@@ -105,7 +105,7 @@ browser.webRequest.onHeadersReceived.addListener(
   {
     // We need to specify the allowed url here because it looks like
     // it's not picking it up from the host permissions in manifest
-    urls: ['https://*.toddle.site/*'],
+    urls: ['https://*.toddle.site/*', 'https://*.nordcraft.site/*'],
     types: ['xmlhttprequest'],
   },
   ['responseHeaders'],

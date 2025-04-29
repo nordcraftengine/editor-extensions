@@ -1,18 +1,18 @@
 {
   "manifest_version": 3,
-  "name": "toddle",
-  "description": "Browser extension for the toddle editor.",
-  "version": "2.3.3",
+  "name": "Nordcraft",
+  "description": "Browser extension for the nordcraft editor.",
+  "version": "2.3.4",
   "icons": {
-    "32": "icons/toddle_32x32.png",
-    "64": "icons/toddle_64x64.png",
-    "128": "icons/toddle_128x128.png"
+    "32": "icons/nordcraft-32.png",
+    "64": "icons/nordcraft-64.png",
+    "128": "icons/nordcraft-128.png"
   },
   "background": {
     "service_worker": "chrome/src/background.js",
     "type": "module"
   },
-  "homepage_url": "https://toddle.dev",
+  "homepage_url": "https://editor.nordcraft.com/",
   "permissions": [
     "cookies",
     "webNavigation",
@@ -20,13 +20,16 @@
     "webRequest"
   ],
   "host_permissions": [
-    "https://*.toddle.site/*"
+    "https://*.toddle.site/*",
+    "https://*.nordcraft.site/*"
   ],
   "content_scripts": [
     {
       "matches": [
         "https://*.toddle.dev/*",
-        "https://*.toddle.site/*"
+        "https://*.toddle.site/*",
+        "https://editor.nordcraft.com/*",
+        "https://*.nordcraft.site/*"
       ],
       "js": [
         "chrome/src/install_notifier.js"

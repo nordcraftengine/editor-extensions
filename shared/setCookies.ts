@@ -75,7 +75,7 @@ export function setCookies({
  * Parses a set-cookie header string into a ParsedCookie object
  * if possible
  * Example input:
- * access_token=xyz; Expires=Mon, 06 Nov 2023 15:53:30 GMT; Secure; HttpOnly; SameSite=Lax; Domain=my-page.toddle.site; Path=/;
+ * access_token=xyz; Expires=Mon, 06 Nov 2023 15:53:30 GMT; Secure; HttpOnly; SameSite=Lax; Domain=my-page.nordcraft.site; Path=/;
  */
 const parseCookie = (cookie: string): ParsedCookie | undefined => {
   const validString = (s: any): s is string =>

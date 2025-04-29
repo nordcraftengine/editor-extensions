@@ -3,13 +3,13 @@ import { setCookies } from '../../shared/setCookies.js'
 import type { RequireFields } from '../../shared/setCookies.js'
 import { updateSessionRules } from './helpers.js'
 
-console.log('toddle extension loaded')
+console.log('nordcraft extension loaded')
 
 const RULE_ID = 18112022
 
 chrome.webNavigation.onBeforeNavigate.addListener(
   async (event) => {
-    // remove existing rules. This is to prevents the rules from being applied to iframes outside toddle.dev
+    // remove existing rules. This is to prevents the rules from being applied to iframes outside nordcraft.com
     await chrome.declarativeNetRequest.updateSessionRules({
       removeRuleIds: [RULE_ID],
     })
@@ -17,7 +17,7 @@ chrome.webNavigation.onBeforeNavigate.addListener(
     if (event.parentFrameId < 0) {
       return
     }
-    // check the parent frame so we only override cookies if we are on toddle.dev
+    // check the parent frame so we only override cookies if we are on nordcraft.com
     const parentFrame = await chrome.webNavigation.getFrame({
       documentId: event.parentDocumentId,
       frameId: event.parentFrameId,
@@ -28,11 +28,14 @@ chrome.webNavigation.onBeforeNavigate.addListener(
     }
 
     const parentUrl = new URL(parentFrame.url)
-    if (parentUrl.host.endsWith('toddle.dev') === false) {
+    if (
+      parentUrl.host.endsWith('toddle.dev') === false ||
+      parentUrl.host.endsWith('nordcraft.com') === false
+    ) {
       return
     }
 
-    // Get the cookies for the .toddle.site domain
+    // Get the cookies for the .nordcraft.site domain
     const url = new URL(event.url)
     const domain = url.host
     const domainCookies = await chrome.cookies.getAll({
@@ -63,7 +66,10 @@ chrome.webNavigation.onBeforeNavigate.addListener(
     }
   },
   {
-    url: [{ hostContains: '.toddle.site' }],
+    url: [
+      { hostContains: '.toddle.site' },
+      { hostContains: '.nordcraft.site' },
+    ],
   },
 )
 
@@ -139,7 +145,7 @@ chrome.webRequest.onHeadersReceived.addListener(
   },
   {
     // In the manifest.json we have declared the host permissions to
-    // *.toddle.site therefore, it's okay to use <all_urls> here
+    // *.nordcraft.site therefore, it's okay to use <all_urls> here
     urls: ['<all_urls>'],
     types: ['xmlhttprequest'],
   },

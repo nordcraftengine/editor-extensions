@@ -2,7 +2,7 @@ let installedChromeVersion = chrome.runtime.getManifest().version
 
 window.postMessage(
   {
-    sender: 'toddle-extension',
+    sender: 'nordcraft-extension',
     message_name: 'info',
     message: {
       installed: true,
@@ -16,7 +16,7 @@ document.onreadystatechange = (event) => {
   if (document.readyState === 'complete') {
     window.postMessage(
       {
-        sender: 'toddle-extension',
+        sender: 'nordcraft-extension',
         message_name: 'info',
         message: {
           installed: true,
@@ -32,7 +32,7 @@ document.onreadystatechange = (event) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   window.postMessage(
     {
-      sender: 'toddle-extension',
+      sender: 'nordcraft-extension',
       message_name: 'cookies',
       message,
     },
