@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Nordcraft",
-  "version": "2.3.2",
-  "description": "Browser extension for the nordcraft editor.",
+  "version": "2.3.3",
+  "description": "Browser extension for the Nordcraft editor.",
   "background": {
     "scripts": [
       "firefox/src/background.js"
@@ -12,7 +12,7 @@
     "48": "icons/nordcraft-48.png",
     "96": "icons/nordcraft-96.png"
   },
-  "homepage_url": "https://editor.nordcraft.com/",
+  "homepage_url": "https://nordcraft.com/",
   "permissions": [
     "cookies",
     "webRequest",

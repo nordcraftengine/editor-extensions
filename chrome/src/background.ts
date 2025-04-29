@@ -3,7 +3,7 @@ import { setCookies } from '../../shared/setCookies.js'
 import type { RequireFields } from '../../shared/setCookies.js'
 import { updateSessionRules } from './helpers.js'
 
-console.log('nordcraft extension loaded')
+console.log('Nordcraft extension loaded')
 
 const RULE_ID = 18112022
 

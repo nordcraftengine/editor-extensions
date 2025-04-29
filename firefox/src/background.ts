@@ -1,7 +1,7 @@
 type SetCookiesArguments =
   import('../../shared/setCookies.js').SetCookiesArguments
 
-console.info('nordcraft extension loaded')
+console.info('Nordcraft extension loaded')
 
 let setCookies: (args: SetCookiesArguments) => void | undefined
 const setup = async () => {
@@ -12,7 +12,7 @@ const setup = async () => {
 setup()
 
 /**
- * Used to send notifications to the nordcraft editor about which cookies are set
+ * Used to send notifications to the Nordcraft editor about which cookies are set
  */
 const notifyUser = async (requestedUrl: string) => {
   try {
