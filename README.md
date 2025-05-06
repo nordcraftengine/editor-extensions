@@ -34,9 +34,9 @@ The extension(s) are responsible for 3 things:
 
 To test the different aspects of the extensions, it's recommended to:
 
-1. Run an app that sets an `access_token` (or any cookie) using the `Set session cookies` action. Verify the cookie is actually set for the iframe (on the `*.toddle.site` domain)
-2. Call the `/.toddle/logout` endpoint to clear the `access_token` cookie, and verify the cookie actually gets removed from the iframe
-3. After logging in outside of the iframe on your preview domain (`*.toddle.site`), verify that you're still logged in when opening the project in the editor
+1. Run an app that sets an `access_token` (or any cookie) using the `Set session cookies` action. Verify the cookie is actually set for the iframe (on the `*.nordcraft.site` domain)
+2. Call the `/.nordcraft/logout` endpoint to clear the `access_token` cookie, and verify the cookie actually gets removed from the iframe
+3. After logging in outside of the iframe on your preview domain (`*.nordcraft.site`), verify that you're still logged in when opening the project in the editor
 
 For now, we use this project for testing: https://erik_auth.toddle.site/
 Everyone should be able to sign up and test login/logout on the login screen.
