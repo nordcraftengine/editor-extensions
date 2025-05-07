@@ -29,7 +29,7 @@ chrome.webNavigation.onBeforeNavigate.addListener(
 
     const parentUrl = new URL(parentFrame.url)
     if (
-      parentUrl.host.endsWith('toddle.dev') === false ||
+      parentUrl.host.endsWith('toddle.dev') === false &&
       parentUrl.host.endsWith('nordcraft.com') === false
     ) {
       return
