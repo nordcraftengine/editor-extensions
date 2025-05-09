@@ -45,7 +45,11 @@ const notifyUser = async (requestedUrl: string) => {
  */
 browser.webRequest.onBeforeSendHeaders.addListener(
   async (event) => {
-    if (event.parentFrameId === -1) {
+    const isNordcraft = await nordcraftIsParentFrame({
+      parentFrameId: event.parentFrameId,
+      tabId: event.tabId,
+    })
+    if (!isNordcraft) {
       // This means we're not in an iframe
       return {}
     }
@@ -81,25 +85,34 @@ browser.webRequest.onBeforeSendHeaders.addListener(
  */
 browser.webRequest.onHeadersReceived.addListener(
   (info) => {
-    if (info.responseHeaders) {
-      const setCookieHeader = info.responseHeaders.find(
-        (h) => h.name.toLowerCase() === 'set-cookie',
-      )
-      const setCookieHeaders = setCookieHeader?.value
-        // Firefox returns a string with all set-cookie cookies separated by newline \n
-        ?.split('\n')
-        .filter(Boolean)
-      if (!setCookieHeaders || setCookieHeaders.length === 0) {
-        return
+    // check the parent frame so we only override cookies if we are on nordcraft.com
+    nordcraftIsParentFrame({
+      parentFrameId: info.parentFrameId,
+      tabId: info.tabId,
+    }).then((isNordcraft) => {
+      if (!isNordcraft) {
+        return undefined
       }
-      setCookies({
-        setCookieHeaders,
-        requestUrl: info.url,
-        setCookie: (cookie) => browser.cookies.set(cookie),
-        removeCookie: (cookie) => browser.cookies.remove(cookie),
-        notifyUser,
-      })
-    }
+      if (info.responseHeaders) {
+        const setCookieHeader = info.responseHeaders.find(
+          (h) => h.name.toLowerCase() === 'set-cookie',
+        )
+        const setCookieHeaders = setCookieHeader?.value
+          // Firefox returns a string with all set-cookie cookies separated by newline \n
+          ?.split('\n')
+          .filter(Boolean)
+        if (!setCookieHeaders || setCookieHeaders.length === 0) {
+          return
+        }
+        setCookies({
+          setCookieHeaders,
+          requestUrl: info.url,
+          setCookie: (cookie) => browser.cookies.set(cookie),
+          removeCookie: (cookie) => browser.cookies.remove(cookie),
+          notifyUser,
+        })
+      }
+    })
     return undefined
   },
   {
@@ -110,3 +123,34 @@ browser.webRequest.onHeadersReceived.addListener(
   },
   ['responseHeaders'],
 )
+
+async function nordcraftIsParentFrame({
+  parentFrameId,
+  tabId,
+}: {
+  parentFrameId: number
+  tabId: number
+}) {
+  if (parentFrameId < 0) {
+    return false
+  }
+  // check the parent frame so we only override cookies if we are on nordcraft.com
+  const parentFrame = await browser.webNavigation.getFrame({
+    frameId: parentFrameId,
+    tabId: tabId,
+  })
+
+  if (!parentFrame) {
+    return false
+  }
+
+  const parentUrl = new URL(parentFrame.url)
+
+  if (
+    parentUrl.host.endsWith('toddle.dev') === false &&
+    parentUrl.host.endsWith('nordcraft.com') === false
+  ) {
+    return false
+  }
+  return true
+}
