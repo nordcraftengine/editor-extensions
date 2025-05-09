@@ -30,3 +30,33 @@ export async function updateSessionRules({
     ],
   })
 }
+
+export async function nordcraftIsParentFrame({
+  parentFrameId,
+  parentDocumentId,
+}: {
+  parentFrameId: number
+  parentDocumentId?: string
+}) {
+  if (parentFrameId < 0) {
+    return false
+  }
+  // check the parent frame so we only override cookies if we are on nordcraft.com
+  const parentFrame = await chrome.webNavigation.getFrame({
+    documentId: parentDocumentId,
+    frameId: parentFrameId,
+  })
+
+  if (!parentFrame) {
+    return false
+  }
+
+  const parentUrl = new URL(parentFrame.url)
+  if (
+    parentUrl.host.endsWith('toddle.dev') === false &&
+    parentUrl.host.endsWith('nordcraft.com') === false
+  ) {
+    return false
+  }
+  return true
+}
