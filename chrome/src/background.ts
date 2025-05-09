@@ -63,10 +63,6 @@ chrome.webNavigation.onBeforeNavigate.addListener(
 
 chrome.webRequest.onHeadersReceived.addListener(
   (info) => {
-    if (info.parentFrameId < 0) {
-      return
-    }
-
     // check the parent frame so we only override cookies if we are on nordcraft.com
     nordcraftIsParentFrame({
       parentFrameId: info.parentFrameId,
@@ -95,7 +91,6 @@ chrome.webRequest.onHeadersReceived.addListener(
             await chrome.cookies.set(cookie)
 
             const parsedUrl = new URL(cookie.url)
-
             const domainCookies = await chrome.cookies.getAll({
               domain: domain ?? parsedUrl.host,
             })
