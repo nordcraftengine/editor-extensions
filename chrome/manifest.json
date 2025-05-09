@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Nordcraft",
   "description": "Browser extension for the Nordcraft editor.",
-  "version": "2.3.5",
+  "version": "2.3.6",
   "icons": {
     "32": "icons/nordcraft-32.png",
     "64": "icons/nordcraft-64.png",
