@@ -107,7 +107,12 @@ browser.webRequest.onHeadersReceived.addListener(
         setCookies({
           setCookieHeaders,
           requestUrl: info.url,
-          setCookie: (cookie) => browser.cookies.set(cookie),
+          setCookie: (cookie, domain) => {
+            if (!domain?.endsWith('.toddle.site')) {
+              return
+            }
+            browser.cookies.set(cookie)
+          },
           removeCookie: (cookie) => browser.cookies.remove(cookie),
           notifyUser,
         })

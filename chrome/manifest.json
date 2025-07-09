@@ -17,7 +17,8 @@
     "cookies",
     "webNavigation",
     "declarativeNetRequest",
-    "webRequest"
+    "webRequest",
+    "tabs"
   ],
   "host_permissions": [
     "https://*.toddle.site/*",

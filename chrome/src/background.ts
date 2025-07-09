@@ -61,6 +61,50 @@ chrome.webNavigation.onBeforeNavigate.addListener(
   },
 )
 
+chrome.tabs.onActivated.addListener(async (activeInfo) => {
+  const tab = await chrome.tabs.query({
+    active: true,
+    lastFocusedWindow: true,
+  })
+
+  const urlString = tab[0].url
+
+  if (!urlString) {
+    return
+  }
+
+  const url = new URL(urlString)
+
+  if (
+    url.host.endsWith('toddle.dev') === false &&
+    url.host.endsWith('nordcraft.com') === false
+  ) {
+    return false
+  }
+
+  // Get the cookies for the .nordcraft.site domain
+  const frames = await chrome.webNavigation.getAllFrames({
+    tabId: activeInfo.tabId,
+  })
+
+  const domain = frames
+    ?.map((frame) => {
+      const url = new URL(frame.url)
+      if (url.host?.endsWith('.toddle.site')) {
+        return url.host
+      }
+    })
+    .filter((v) => v)[0]
+  if (!domain) {
+    return
+  }
+  const cookies = await chrome.cookies.getAll({ domain })
+
+  if (cookies.length > 0) {
+    await updateSessionRules({ domainCookies: cookies, RULE_ID })
+  }
+})
+
 chrome.webRequest.onHeadersReceived.addListener(
   (info) => {
     // check the parent frame so we only override cookies if we are on nordcraft.com
@@ -71,6 +115,11 @@ chrome.webRequest.onHeadersReceived.addListener(
       if (!isNordcraft) {
         return undefined
       }
+
+      if (!info.initiator) {
+        return undefined
+      }
+
       if (info.responseHeaders) {
         const setCookieHeaders = info.responseHeaders
           .filter(
@@ -88,6 +137,9 @@ chrome.webRequest.onHeadersReceived.addListener(
           setCookieHeaders,
           requestUrl: info.url,
           setCookie: async (cookie, domain) => {
+            if (!domain?.endsWith('.toddle.site')) {
+              return
+            }
             await chrome.cookies.set(cookie)
 
             const parsedUrl = new URL(cookie.url)
