@@ -1,7 +1,11 @@
 // The .js extension is necessary for Chrome to pickup the import correctly
 import { setCookies } from '../../shared/setCookies.js'
 import type { RequireFields } from '../../shared/setCookies.js'
-import { nordcraftIsParentFrame, updateSessionRules } from './helpers.js'
+import {
+  getCookiesAndUpdateSessionRules,
+  nordcraftIsParentFrame,
+  updateSessionRules,
+} from './helpers.js'
 
 console.log('Nordcraft extension loaded')
 
@@ -23,35 +27,10 @@ chrome.webNavigation.onBeforeNavigate.addListener(
       return
     }
 
-    // Get the cookies for the .nordcraft.site domain
-    const url = new URL(event.url)
-    const domain = url.host
-    const domainCookies = await chrome.cookies.getAll({
-      domain,
+    await getCookiesAndUpdateSessionRules({
+      url: event.url,
+      RULE_ID,
     })
-    const tab = chrome.tabs.query({
-      active: true,
-      lastFocusedWindow: true,
-    })
-
-    const requestedUrl = url.origin
-
-    // Don't return the value for the http cookies and include the requested url
-    const cookies = domainCookies.map((c) =>
-      c.httpOnly
-        ? { ...c, url: requestedUrl, value: undefined }
-        : { ...c, url: requestedUrl },
-    )
-
-    tab.then(([t]) => {
-      if (t && t.id) {
-        chrome.tabs.sendMessage(t.id, cookies)
-      }
-    })
-
-    if (domainCookies.length > 0) {
-      await updateSessionRules({ domainCookies, RULE_ID })
-    }
   },
   {
     url: [
@@ -76,8 +55,8 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
   const url = new URL(urlString)
 
   if (
-    url.host.endsWith('toddle.dev') === false &&
-    url.host.endsWith('nordcraft.com') === false
+    url.host.endsWith('nordcraft.com') === false &&
+    url.host.endsWith('-toddle.toddle.site')
   ) {
     return false
   }
@@ -87,22 +66,20 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
     tabId: activeInfo.tabId,
   })
 
-  const domain = frames
+  const frameUrl = frames
     ?.map((frame) => {
       const url = new URL(frame.url)
       if (url.host?.endsWith('.toddle.site')) {
-        return url.host
+        return frame.url
       }
     })
     .filter((v) => v)[0]
-  if (!domain) {
+
+  if (!frameUrl) {
     return
   }
-  const cookies = await chrome.cookies.getAll({ domain })
 
-  if (cookies.length > 0) {
-    await updateSessionRules({ domainCookies: cookies, RULE_ID })
-  }
+  await getCookiesAndUpdateSessionRules({ url: frameUrl, RULE_ID })
 })
 
 chrome.webRequest.onHeadersReceived.addListener(
@@ -137,7 +114,10 @@ chrome.webRequest.onHeadersReceived.addListener(
           setCookieHeaders,
           requestUrl: info.url,
           setCookie: async (cookie, domain) => {
-            if (!domain?.endsWith('.toddle.site')) {
+            if (
+              !domain?.endsWith('.toddle.site') &&
+              !domain?.endsWith('.nordcraft.site')
+            ) {
               return
             }
             await chrome.cookies.set(cookie)

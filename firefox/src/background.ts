@@ -108,7 +108,10 @@ browser.webRequest.onHeadersReceived.addListener(
           setCookieHeaders,
           requestUrl: info.url,
           setCookie: (cookie, domain) => {
-            if (!domain?.endsWith('.toddle.site')) {
+            if (
+              !domain?.endsWith('.toddle.site') &&
+              !domain?.endsWith('.nordcraft.site')
+            ) {
               return
             }
             browser.cookies.set(cookie)
@@ -151,10 +154,7 @@ async function nordcraftIsParentFrame({
 
   const parentUrl = new URL(parentFrame.url)
 
-  if (
-    parentUrl.host.endsWith('toddle.dev') === false &&
-    parentUrl.host.endsWith('nordcraft.com') === false
-  ) {
+  if (parentUrl.host.endsWith('nordcraft.com') === false) {
     return false
   }
   return true
