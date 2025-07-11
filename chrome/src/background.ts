@@ -56,12 +56,12 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
 
   if (
     url.host.endsWith('nordcraft.com') === false &&
-    url.host.endsWith('-toddle.toddle.site')
+    url.host.endsWith('-toddle.toddle.site') === false
   ) {
     return false
   }
 
-  // Get the cookies for the .nordcraft.site domain
+  // Get the cookies for the .toddle.site domain
   const frames = await chrome.webNavigation.getAllFrames({
     tabId: activeInfo.tabId,
   })
