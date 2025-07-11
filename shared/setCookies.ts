@@ -3,7 +3,7 @@ export interface SetCookiesArguments {
   setCookieHeaders: string[]
   setCookie: (cookie: ParsedCookie & { url: string }, domain?: string) => void
   removeCookie: (cookie: { name: string; url: string }, domain?: string) => void
-  notifyUser: (requestedUrl: string) => void
+  notifyUser: (requestedUrl: string, domain: string) => void
 }
 
 export function setCookies({
@@ -65,7 +65,7 @@ export function setCookies({
           )
         }
         try {
-          notifyUser(url)
+          notifyUser(url, requestedUrl.host)
         } catch {}
       },
     )

@@ -14,11 +14,11 @@ setup()
 /**
  * Used to send notifications to the Nordcraft editor about which cookies are set
  */
-const notifyUser = async (requestedUrl: string) => {
+const notifyUser = async (requestedUrl: string, domain?: string) => {
   try {
     const url = new URL(requestedUrl)
     const domainCookies = await browser.cookies.getAll({
-      domain: url.host,
+      domain: domain ?? url.host,
     })
     const cookies = domainCookies.map((c) =>
       c.httpOnly
