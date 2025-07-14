@@ -14,11 +14,11 @@ setup()
 /**
  * Used to send notifications to the Nordcraft editor about which cookies are set
  */
-const notifyUser = async (requestedUrl: string) => {
+const notifyUser = async (requestedUrl: string, domain?: string) => {
   try {
     const url = new URL(requestedUrl)
     const domainCookies = await browser.cookies.getAll({
-      domain: url.host,
+      domain: domain ?? url.host,
     })
     const cookies = domainCookies.map((c) =>
       c.httpOnly
@@ -107,7 +107,15 @@ browser.webRequest.onHeadersReceived.addListener(
         setCookies({
           setCookieHeaders,
           requestUrl: info.url,
-          setCookie: (cookie) => browser.cookies.set(cookie),
+          setCookie: (cookie, domain) => {
+            if (
+              !domain?.endsWith('.toddle.site') &&
+              !domain?.endsWith('.nordcraft.site')
+            ) {
+              return
+            }
+            browser.cookies.set(cookie)
+          },
           removeCookie: (cookie) => browser.cookies.remove(cookie),
           notifyUser,
         })
@@ -146,10 +154,7 @@ async function nordcraftIsParentFrame({
 
   const parentUrl = new URL(parentFrame.url)
 
-  if (
-    parentUrl.host.endsWith('toddle.dev') === false &&
-    parentUrl.host.endsWith('nordcraft.com') === false
-  ) {
+  if (parentUrl.host.endsWith('nordcraft.com') === false) {
     return false
   }
   return true

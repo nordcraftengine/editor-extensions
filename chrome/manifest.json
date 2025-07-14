@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Nordcraft",
   "description": "Browser extension for the Nordcraft editor.",
-  "version": "2.3.6",
+  "version": "2.3.7",
   "icons": {
     "32": "icons/nordcraft-32.png",
     "64": "icons/nordcraft-64.png",
@@ -17,7 +17,8 @@
     "cookies",
     "webNavigation",
     "declarativeNetRequest",
-    "webRequest"
+    "webRequest",
+    "tabs"
   ],
   "host_permissions": [
     "https://*.toddle.site/*",
@@ -26,7 +27,6 @@
   "content_scripts": [
     {
       "matches": [
-        "https://*.toddle.dev/*",
         "https://*.toddle.site/*",
         "https://editor.nordcraft.com/*",
         "https://*.nordcraft.site/*"
