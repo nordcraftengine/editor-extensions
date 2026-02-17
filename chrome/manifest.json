@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Nordcraft",
   "description": "Browser extension for the Nordcraft editor.",
-  "version": "2.3.7",
+  "version": "2.3.8",
   "icons": {
     "32": "icons/nordcraft-32.png",
     "64": "icons/nordcraft-64.png",
@@ -20,10 +20,7 @@
     "webRequest",
     "tabs"
   ],
-  "host_permissions": [
-    "https://*.toddle.site/*",
-    "https://*.nordcraft.site/*"
-  ],
+  "host_permissions": ["https://*.toddle.site/*", "https://*.nordcraft.site/*"],
   "content_scripts": [
     {
       "matches": [
@@ -31,9 +28,7 @@
         "https://editor.nordcraft.com/*",
         "https://*.nordcraft.site/*"
       ],
-      "js": [
-        "chrome/src/install_notifier.js"
-      ],
+      "js": ["chrome/src/install_notifier.js"],
       "run_at": "document_start"
     }
   ]

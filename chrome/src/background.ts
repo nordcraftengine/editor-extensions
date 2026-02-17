@@ -56,7 +56,8 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
 
   if (
     url.host.endsWith('nordcraft.com') === false &&
-    url.host.endsWith('-toddle.toddle.site') === false
+    url.host.endsWith('-toddle.toddle.site') === false &&
+    url.host.endsWith('-toddle.nordcraft.site') === false
   ) {
     return false
   }
@@ -69,7 +70,10 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
   const frameUrl = frames
     ?.map((frame) => {
       const url = new URL(frame.url)
-      if (url.host?.endsWith('.toddle.site')) {
+      if (
+        url.host?.endsWith('.toddle.site') ||
+        url.host?.endsWith('.nordcraft.site')
+      ) {
         return frame.url
       }
     })
